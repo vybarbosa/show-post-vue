@@ -1,5 +1,12 @@
 # show-post
 
+This project lists some posts, and by clicking on any of them the user has access to more information about the posts.
+
+## Project images
+
+![posts](./src/assets/posts.png)
+![post-view](./src/assets/post-view.png)
+
 ## Project setup
 ```
 npm install
