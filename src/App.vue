@@ -13,7 +13,15 @@
       </div> 
     </div>
   </ul>
-  <PostsPaginar :postsTotal="postsTotal" :postsPorPagina="postsPorPagina" />
+    <div class="footerCard" v-if="!postClicado">
+      <div class="qtdPagina">
+      <p>Página: {{ paginaAtual }} / {{ totalPaginas }}</p>
+    </div>
+    <div class="buttons">
+      <button class=button @click="paginaAnterior">Anterior</button>
+      <button class="button" @click="proximaPagina">Próximo</button>
+    </div>
+  </div>
  </section>
 </template>
 
@@ -26,6 +34,9 @@ data () {
   return {
     posts: [],
     postClicado: null,
+    totalPaginas: null,
+    itensPorPagina: 5,
+    paginaAtual: 1,
   }
 },
 components: {
@@ -33,11 +44,32 @@ components: {
 },
 methods: {
   fetchPosts() {
-    this.post = false
-    api.get("/posts").then((response) => {
+    try {
+      this.post = false
+      api.get("/posts").then((response) => {
       this.posts = response.data;
+      this.totalPaginas = Math.ceil(this.posts.length / this.itensPorPagina);
+      const inicioIndex = (this.paginaAtual - 1) * this.itensPorPagina;
+      const fimIndex = inicioIndex + this.itensPorPagina;
+      this.posts = this.posts.slice(inicioIndex, fimIndex); 
     })
+    } catch (error) {
+      this.posts = []
+    }
   },
+
+  proximaPagina () {
+    if (this.paginaAtual < this.totalPaginas) {
+      this.paginaAtual++;
+      this.fetchPosts();
+    }
+  },
+  paginaAnterior () {
+    if (this.paginaAtual > 1) {
+      this.paginaAtual--;
+      this.fetchPosts();
+    }
+  }
 },
 created () {
   this.fetchPosts();
@@ -114,4 +146,25 @@ ul {
   box-shadow: 0 4px 8px #514644;
 }
 
+.qtdPagina {
+  display: flex;
+  justify-content: center;
+}
+
+.qtdPagina p {
+  color: #514644;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.buttons .button {
+  margin: 10px;
+}
+
+.footerCard {
+  margin-top: 35px;
+}
 </style>

@@ -61,7 +61,6 @@ export default {
 .paragrafoPage {
   width: 100%;
   height: 400px;
-  box-shadow: 0 4px 8px #514644;
   background: #bb9d8b;
 }
 
